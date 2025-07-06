@@ -7,12 +7,18 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 
-username = 'bisimchi0110@gmail.com' #Username(sender email address) EX: abcd@gmail.com
-password = 'g' #Gmail App Password EX: aswd dedw frfr frgt
+username = '' #Username(sender email address) EX: abcd@gmail.com
+password = '' #Gmail App Password EX: aswd dedw frfr frgt
 target_email = "darksideofmosy@gmail.com" 
 re_server = 'imap.gmail.com'
 
 while True:
+
+    print("Retrieving Email Inbox...")
+    print("")
+
+    delay = 60
+
     mail = imaplib.IMAP4_SSL(re_server)
     mail.login(username, password)
 
@@ -56,30 +62,33 @@ while True:
                 if mail_from == "darksider <darksideofmosy@gmail.com>":
                     print(f'From: {mail_from}')
                     print(f'Subject: {mail_subject}')
-                    print(f'Content: {mail_content}')
-
+                    print("")
+                    
                     subject = mail_subject
-                    content = mail_content
+                    
                     
     if subject == "help":
         print("sending help message...")
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = "mailer help"
+        msg['Subject'] = "EPS32mail help"
         msg['From'] = username
         msg['To'] = target_email
         html = """ <!DOCTYPE html>
         <html>
         <head></head>
         <body>
-        <h1>{dkp}</h1>
+        <h1>EPS32mail help</h1>
         <br>
         <h2>Options</h2>
-        <p>Count: {count}</p>
-        <p>Delay: {delay} Minutes</p>
-        <h2>Product</h2>
-        <p>Url: {url}</p>
+        <p>help : send help message</p>
+        <p>none : do nothing</p>
+        <p>cap : capture photo</p>
+        <p>100 : 100 seconds cycle delay</p>
+        <p>200 : 200 seconds cycle delay</p>
+        <p>3600 : 3600 seconds cycle delay</p>
+        <p>7200 : 7200 seconds cycle delay</p>
         </body>
-        </html>""".format(dkp=1, url=1, count=1, delay=1)
+        </html>"""
 
         text = MIMEText(html, 'html')
         msg.attach(text)
@@ -99,9 +108,132 @@ while True:
         se_server.sendmail(username, target_email, msg.as_string())
         se_server.quit()
         se_server.close()
-        print("Done!")
+        print("Email Sent")
+
+    if subject == "none":
+        print("Do Nothing...")
+
+    if subject == "100":
+        delay = 100
+        print("Delay set to 100 seconds...")
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = "100 seconds cycle delay"
+        msg['From'] = username
+        msg['To'] = target_email
+        html = """ <!DOCTYPE html>
+        <html>
+        <head></head>
+        <body>
+        <h1>100 second cycle delay</h1>
+        <br>
+        <h2>set to 100 seconds cycle delay</h2>
+        </body>
+        </html>"""
+
+        text = MIMEText(html, 'html')
+        msg.attach(text)
+        se_server = smtplib.SMTP('smtp.gmail.com', 587)
+        sleep(2)
+        se_server.ehlo()
+        se_server.starttls()
+        se_server.login(username,password)
+        se_server.sendmail(username, target_email, msg.as_string())
+        se_server.quit()
+        se_server.close()
+        print("Email Sent")
+
+    if subject == "200":
+        delay = 200
+        print("Delay set to 200 seconds...")
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = "200 seconds cycle delay"
+        msg['From'] = username
+        msg['To'] = target_email
+        html = """ <!DOCTYPE html>
+        <html>
+        <head></head>
+        <body>
+        <h1>200 second cycle delay</h1>
+        <br>
+        <h2>set to 200 seconds cycle delay</h2>
+        </body>
+        </html>"""
+
+        text = MIMEText(html, 'html')
+        msg.attach(text)
+        se_server = smtplib.SMTP('smtp.gmail.com', 587)
+        sleep(2)
+        se_server.ehlo()
+        se_server.starttls()
+        se_server.login(username,password)
+        se_server.sendmail(username, target_email, msg.as_string())
+        se_server.quit()
+        se_server.close()
+        print("Email Sent")
+
+    
+    if subject == "3600":
+        delay = 3600
+        print("Delay set to 1 hour...")
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = "1 hour cycle delay"
+        msg['From'] = username
+        msg['To'] = target_email
+        html = """ <!DOCTYPE html>
+        <html>
+        <head></head>
+        <body>
+        <h1>1 hour cycle delay</h1>
+        <br>
+        <h2>set to 1 hour cycle delay</h2>
+        </body>
+        </html>"""
+
+        text = MIMEText(html, 'html')
+        msg.attach(text)
+        se_server = smtplib.SMTP('smtp.gmail.com', 587)
+        sleep(2)
+        se_server.ehlo()
+        se_server.starttls()
+        se_server.login(username,password)
+        se_server.sendmail(username, target_email, msg.as_string())
+        se_server.quit()
+        se_server.close()
+        print("Email Sent")
+    
+    if subject == "7200":
+        delay = 7200
+        print("Delay set to 2 hours...")
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = "2 hours cycle delay"
+        msg['From'] = username
+        msg['To'] = target_email
+        html = """ <!DOCTYPE html>
+        <html>
+        <head></head>
+        <body>
+        <h1>2 hours cycle delay</h1>
+        <br>
+        <h2>set to 2 hours cycle delay</h2>
+        </body>
+        </html>"""
+
+        text = MIMEText(html, 'html')
+        msg.attach(text)
+        se_server = smtplib.SMTP('smtp.gmail.com', 587)
+        sleep(2)
+        se_server.ehlo()
+        se_server.starttls()
+        se_server.login(username,password)
+        se_server.sendmail(username, target_email, msg.as_string())
+        se_server.quit()
+        se_server.close()
+        print("Email Sent")
 
 
-    print("=========================")
+
+        
+
+    print("===================================")
     print("")
-    sleep(30)
+    sleep(delay)
