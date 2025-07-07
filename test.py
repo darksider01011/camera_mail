@@ -1,4 +1,5 @@
-import os 
+import os
+from datetime import datetime
 import requests
 import subprocess
 import smtplib
@@ -87,6 +88,7 @@ def func():
                 <p>help : send help message</p>
                 <p>none : do nothing</p>
                 <p>cap : capture photo</p>
+                <p>status : camera status</p>
                 <p>100 : 100 seconds cycle delay</p>
                 <p>200 : 200 seconds cycle delay</p>
                 <p>3600 : 3600 seconds cycle delay</p>
@@ -96,14 +98,6 @@ def func():
 
                 text = MIMEText(html, 'html')
                 msg.attach(text)
-
-                #fp = open('s25.jpg', 'rb')
-                #image = MIMEImage(fp.read())
-                #fp.close()
-
-                #msg.attach(image)
-
-
                 se_server = smtplib.SMTP('smtp.gmail.com', 587)
                 sleep(2)
                 se_server.ehlo()
@@ -236,8 +230,12 @@ def func():
             
             if subject == "status":
                 print("Retrieving camera status...")
-                cmd = "ping 192.168.1.106"
-                result = subprocess.check_output(cmd, shell=True, text=True)
+                try:
+                    cmd = "ping 192.168.1.106"
+                    result = subprocess.check_output(cmd, shell=True, text=True)
+                except Exception as e:
+                    print("Error:", e)
+                    result = e
             
                 msg = MIMEMultipart('alternative')
                 msg['Subject'] = "camera status"
@@ -265,11 +263,13 @@ def func():
                 se_server.close()
                 print("Email Sent")
 
-                
-
-            
             if subject == "cap":
                 print("Capturing image...")
+                current_datetime = datetime.now()
+                error_selenium = "NONE"
+                error_download = "NONE"
+
+                
                 options = webdriver.ChromeOptions()
                 options.add_argument('--headless')
                 driver = webdriver.Chrome(options=options)
@@ -279,15 +279,19 @@ def func():
                     element = driver.find_element(By.XPATH, "/html/body/div[1]/p[2]/button[2]")
                     element.click()
                 except Exception as e:
-                    print("Error:", e)
+                    print("error:", e)
+                    error_selenium = e
 
-                sleep(5)
-                
-                res = requests.get("http://192.168.1.106/saved-photo").content
+                sleep(6)
 
-                f = open('saved-photo.jpg', 'wb')
-                f.write(res)
-                f.close()
+                try:
+                    res = requests.get("http://192.168.1.106/saved-photo").content
+                    f = open('saved-photo.jpg', 'wb')
+                    f.write(res)
+                    f.close()
+                except Exception as e:
+                    print("error:", e)          
+                    error_download = e          
 
                 msg = MIMEMultipart('alternative')
                 msg['Subject'] = "Captured image"
@@ -298,8 +302,11 @@ def func():
                 <head></head>
                 <body>
                 <h1>Captured image</h1>
+                <p>Selenium_error: {error_selenium}</p>
+                <p>Download_error: {error_download}</p>
+                <p>Time: {current_datetime}</p>
                 </body>
-                </html>"""
+                </html>""".format(error_selenium = error_selenium, error_download = error_download, current_datetime = current_datetime)
 
                 text = MIMEText(html, 'html')
                 msg.attach(text)
@@ -310,7 +317,6 @@ def func():
 
                 msg.attach(image)
 
-
                 se_server = smtplib.SMTP('smtp.gmail.com', 587)
                 sleep(2)
                 se_server.ehlo()
@@ -320,7 +326,6 @@ def func():
                 se_server.quit()
                 se_server.close()
                 print("Email Sent")
-
 
 
             print("===================================")
