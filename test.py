@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from datetime import date
 import requests
 import subprocess
 import smtplib
@@ -14,26 +15,156 @@ from selenium.webdriver.common.by import By
 
 username = '' #Username(sender email address) EX: abcd@gmail.com
 password = '' #Gmail App Password EX: aswd dedw frfr frgt
-target_email = "" 
+target_email = "darksideofmosy@gmail.com" 
 re_server = 'imap.gmail.com'
 
 def func():
+    i = 0
+    ii = int(i) 
     while True:
+        ii += 1
         try:
-
-            print("Retrieving Email Inbox...")
+            print(ii,"Retrieving Email Inbox...")
             print("")
 
-            delay = 60
+            # main loop delay
+            delay = 5
 
-            mail = imaplib.IMAP4_SSL(re_server)
-            mail.login(username, password)
+            try:
+                mail = imaplib.IMAP4_SSL(re_server)
+            except Exception as e:
+                print("Error: failed to start IMAP server")
+                msg = MIMEMultipart('alternative')
+                msg['Subject'] = "failed to start imap server"
+                msg['From'] = username
+                msg['To'] = target_email
+                html = """ <!DOCTYPE html>
+                <html>
+                <head></head>
+                <body>
+                <h1>failed to start imap server</h1>
+                <br>
+                <p>Error: {e}</p>
+                </body>
+                </html>""".format(e = e)
 
-            # choose mailbox
-            mail.select('inbox')
+                text = MIMEText(html, 'html')
+                msg.attach(text)
+                se_server = smtplib.SMTP('smtp.gmail.com', 587)
+                sleep(2)
+                try:
+                    se_server.ehlo()
+                    se_server.starttls()
+                    se_server.login(username,password)
+                    se_server.sendmail(username, target_email, msg.as_string())
+                    se_server.quit()
+                    se_server.close()
+                    print("Error Sent")
+                except:
+                    print("Error: Failed to send email")
 
-            # retrieve all emails  
-            status, data = mail.search(None, 'ALL')
+            try:
+                mail.login(username, password)
+            except Exception as e:
+                print("Error: failed to login to email")
+                msg = MIMEMultipart('alternative')
+                msg['Subject'] = "failed to login to email"
+                msg['From'] = username
+                msg['To'] = target_email
+                html = """ <!DOCTYPE html>
+                <html>
+                <head></head>
+                <body>
+                <h1>failed to login to email</h1>
+                <br>
+                <p>Error: {e}</p>
+                </body>
+                </html>""".format(e = e)
+
+                text = MIMEText(html, 'html')
+                msg.attach(text)
+                se_server = smtplib.SMTP('smtp.gmail.com', 587)
+                sleep(2)
+                try:
+                    se_server.ehlo()
+                    se_server.starttls()
+                    se_server.login(username,password)
+                    se_server.sendmail(username, target_email, msg.as_string())
+                    se_server.quit()
+                    se_server.close()
+                    print("Error  Sent")
+                except:
+                    print("Error: Failed to send email")
+
+            try:
+                # choose mailbox
+                mail.select('inbox')
+            except Exception as e:
+                print("Error: failed to select mail inbox")
+                msg = MIMEMultipart('alternative')
+                msg['Subject'] = "failed to select mail inbox"
+                msg['From'] = username
+                msg['To'] = target_email
+                html = """ <!DOCTYPE html>
+                <html>
+                <head></head>
+                <body>
+                <h1>failed to select mail inbox</h1>
+                <br>
+                <p>Error: {e}</p>
+                </body>
+                </html>""".format(e = e)
+
+                text = MIMEText(html, 'html')
+                msg.attach(text)
+                se_server = smtplib.SMTP('smtp.gmail.com', 587)
+                sleep(2)
+                try: 
+                    se_server.ehlo()
+                    se_server.starttls()
+                    se_server.login(username,password)
+                    se_server.sendmail(username, target_email, msg.as_string())
+                    se_server.quit()
+                    se_server.close()
+                    print("Error Sent")
+                except:
+                    print("Error: failed to send email")
+                
+
+            try:
+                # retrieve all emails  
+                status, data = mail.search(None, 'ALL')
+            except Exception as e:
+                print("Error: failed to retrieve mails")
+                msg = MIMEMultipart('alternative')
+                msg['Subject'] = "failed to retrieve mails"
+                msg['From'] = username
+                msg['To'] = target_email
+                html = """ <!DOCTYPE html>
+                <html>
+                <head></head>
+                <body>
+                <h1>failed to retrieve mails</h1>
+                <br>
+                <p>Error: {e}</p>
+                </body>
+                </html>""".format(e = e)
+
+                text = MIMEText(html, 'html')
+                msg.attach(text)
+                se_server = smtplib.SMTP('smtp.gmail.com', 587)
+                sleep(2)
+                try:
+                    se_server.ehlo()
+                    se_server.starttls()
+                    se_server.login(username,password)
+                    se_server.sendmail(username, target_email, msg.as_string())
+                    se_server.quit()
+                    se_server.close()
+                    print("Error Sent")
+                except:
+                    print("Error: failed to send email")
+                
 
             mail_ids = []
 
@@ -66,12 +197,13 @@ def func():
 
  
                         if mail_from == "darksider <darksideofmosy@gmail.com>":
-                            print(f'Prompt: {mail_subject}')
-                            print("")
+                            #print(f'Prompt: {mail_subject}')
+                            #print("")
                     
                             subject = mail_subject
                     
-                    
+            print("     Prompt: ", subject)
+            print("")
             if subject == "help":
                 print("sending help message...")
                 msg = MIMEMultipart('alternative')
@@ -100,13 +232,16 @@ def func():
                 msg.attach(text)
                 se_server = smtplib.SMTP('smtp.gmail.com', 587)
                 sleep(2)
-                se_server.ehlo()
-                se_server.starttls()
-                se_server.login(username,password)
-                se_server.sendmail(username, target_email, msg.as_string())
-                se_server.quit()
-                se_server.close()
-                print("Email Sent")
+                try:
+                    se_server.ehlo()
+                    se_server.starttls()
+                    se_server.login(username,password)
+                    se_server.sendmail(username, target_email, msg.as_string())
+                    se_server.quit()
+                    se_server.close()
+                    print("Email Sent")
+                except:
+                    print("Error: failed to send email")
 
             if subject == "none":
                 print("Do Nothing...")
@@ -132,13 +267,16 @@ def func():
                 msg.attach(text)
                 se_server = smtplib.SMTP('smtp.gmail.com', 587)
                 sleep(2)
-                se_server.ehlo()
-                se_server.starttls()
-                se_server.login(username,password)
-                se_server.sendmail(username, target_email, msg.as_string())
-                se_server.quit()
-                se_server.close()
-                print("Email Sent")
+                try:
+                    se_server.ehlo()
+                    se_server.starttls()
+                    se_server.login(username,password)
+                    se_server.sendmail(username, target_email, msg.as_string())
+                    se_server.quit()
+                    se_server.close()
+                    print("Email Sent")
+                except:
+                    print("Error: failed to send email")
 
             if subject == "200":
                 delay = 200
@@ -161,13 +299,16 @@ def func():
                 msg.attach(text)
                 se_server = smtplib.SMTP('smtp.gmail.com', 587)
                 sleep(2)
-                se_server.ehlo()
-                se_server.starttls()
-                se_server.login(username,password)
-                se_server.sendmail(username, target_email, msg.as_string())
-                se_server.quit()
-                se_server.close()
-                print("Email Sent")
+                try:
+                    se_server.ehlo()
+                    se_server.starttls()
+                    se_server.login(username,password)
+                    se_server.sendmail(username, target_email, msg.as_string())
+                    se_server.quit()
+                    se_server.close()
+                    print("Email Sent")
+                except:
+                    print("Error: failed to send email")
 
     
             if subject == "3600":
@@ -191,13 +332,16 @@ def func():
                 msg.attach(text)
                 se_server = smtplib.SMTP('smtp.gmail.com', 587)
                 sleep(2)
-                se_server.ehlo()
-                se_server.starttls()
-                se_server.login(username,password)
-                se_server.sendmail(username, target_email, msg.as_string())
-                se_server.quit()
-                se_server.close()
-                print("Email Sent")
+                try:
+                    se_server.ehlo()
+                    se_server.starttls()
+                    se_server.login(username,password)
+                    se_server.sendmail(username, target_email, msg.as_string())
+                    se_server.quit()
+                    se_server.close()
+                    print("Email Sent")
+                except:
+                    print("Error: failed to send email")
     
             if subject == "7200":
                 delay = 7200
@@ -220,13 +364,16 @@ def func():
                 msg.attach(text)
                 se_server = smtplib.SMTP('smtp.gmail.com', 587)
                 sleep(2)
-                se_server.ehlo()
-                se_server.starttls()
-                se_server.login(username,password)
-                se_server.sendmail(username, target_email, msg.as_string())
-                se_server.quit()
-                se_server.close()
-                print("Email Sent")
+                try:
+                    se_server.ehlo()
+                    se_server.starttls()
+                    se_server.login(username,password)
+                    se_server.sendmail(username, target_email, msg.as_string())
+                    se_server.quit()
+                    se_server.close()
+                    print("Email Sent")
+                except:
+                    print("Error: failed to send email")
             
             if subject == "status":
                 print("Retrieving camera status...")
@@ -255,13 +402,16 @@ def func():
                 msg.attach(text)
                 se_server = smtplib.SMTP('smtp.gmail.com', 587)
                 sleep(2)
-                se_server.ehlo()
-                se_server.starttls()
-                se_server.login(username,password)
-                se_server.sendmail(username, target_email, msg.as_string())
-                se_server.quit()
-                se_server.close()
-                print("Email Sent")
+                try:
+                    se_server.ehlo()
+                    se_server.starttls()
+                    se_server.login(username,password)
+                    se_server.sendmail(username, target_email, msg.as_string())
+                    se_server.quit()
+                    se_server.close()
+                    print("Email Sent")
+                except:
+                    print("Error: failed to send email")
 
             if subject == "cap":
                 print("Capturing image...")
@@ -272,6 +422,8 @@ def func():
                 
                 options = webdriver.ChromeOptions()
                 options.add_argument('--headless')
+                options.add_argument("--disable-logging")  # Disables all logging
+                options.add_argument("--log-level=OFF")
                 driver = webdriver.Chrome(options=options)
                 url = "http://192.168.1.106/"
                 try:
@@ -279,7 +431,7 @@ def func():
                     element = driver.find_element(By.XPATH, "/html/body/div[1]/p[2]/button[2]")
                     element.click()
                 except Exception as e:
-                    print("error:", e)
+                    print("Error: failed to start selenium")
                     error_selenium = e
 
                 sleep(6)
@@ -290,8 +442,19 @@ def func():
                     f.write(res)
                     f.close()
                 except Exception as e:
-                    print("error:", e)          
-                    error_download = e          
+                    print("Error: failed to download image")          
+                    error_download = e 
+
+                today = date.today() 
+
+
+                folder_name = str(today.month) + "." + str(today.day)
+                path = "image_archive/" + folder_name
+
+                exist = os.path.exists(path)
+                
+                if exist == False:
+                    os.makedirs(path)         
 
                 msg = MIMEMultipart('alternative')
                 msg['Subject'] = "Captured image"
@@ -311,21 +474,26 @@ def func():
                 text = MIMEText(html, 'html')
                 msg.attach(text)
 
-                fp = open('saved-photo.jpg', 'rb')
-                image = MIMEImage(fp.read())
-                fp.close()
-
-                msg.attach(image)
+                try:
+                    fp = open('saved-photo.jpg', 'rb')
+                    image = MIMEImage(fp.read())
+                    fp.close()
+                    msg.attach(image)
+                except:
+                    print("Error: failed to find image")
 
                 se_server = smtplib.SMTP('smtp.gmail.com', 587)
                 sleep(2)
-                se_server.ehlo()
-                se_server.starttls()
-                se_server.login(username,password)
-                se_server.sendmail(username, target_email, msg.as_string())
-                se_server.quit()
-                se_server.close()
-                print("Email Sent")
+                try:
+                    se_server.ehlo()
+                    se_server.starttls()
+                    se_server.login(username,password)
+                    se_server.sendmail(username, target_email, msg.as_string())
+                    se_server.quit()
+                    se_server.close()
+                    print("Email Sent")
+                except: 
+                    print("Error: failed to send email")
 
 
             print("===================================")
@@ -333,9 +501,10 @@ def func():
             sleep(delay)
 
         except Exception as e:
-            print(e)
-            sleep(120)
+            ii += 1
+            print("Main loop error:", e)
+            print("===================================")
+            sleep(3)
             func()
     
-
 func()
