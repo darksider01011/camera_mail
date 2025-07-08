@@ -14,7 +14,7 @@ from selenium.webdriver.common.by import By
 
 username = '' #Username(sender email address) EX: abcd@gmail.com
 password = '' #Gmail App Password EX: aswd dedw frfr frgt
-target_email = "darksideofmosy@gmail.com" 
+target_email = "" 
 re_server = 'imap.gmail.com'
 
 def func():
