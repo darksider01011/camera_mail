@@ -18,10 +18,12 @@ from selenium.webdriver.chrome.options import Options
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-username = '' #Username(sender email address) EX: abcd@gmail.com
-password = '' #Gmail App Password EX: aswd dedw frfr frgt
+username = 'bisimchi0110@gmail.com' #Username(sender email address) EX: abcd@gmail.com
+password = 'gofg elbf zaak fkny' #Gmail App Password EX: aswd dedw frfr frgt
 target_email = "darksideofmosy@gmail.com" 
 re_server = 'imap.gmail.com'
+camera_ip = "192.168.1.6"
+relay_ip = "192.168.1.4"
 
 def func():
     while True:
@@ -30,21 +32,21 @@ def func():
             print("")
 
             # main loop delay
-            delay = 5
+            delay = 1
 
             try:
                 mail = imaplib.IMAP4_SSL(re_server)
             except Exception as e:
                 print("ERROR: Failed to start IMAP server")
                 msg = MIMEMultipart('alternative')
-                msg['Subject'] = "failed to start imap server"
+                msg['Subject'] = "Failed to start imap server"
                 msg['From'] = username
                 msg['To'] = target_email
                 html = """ <!DOCTYPE html>
                 <html>
                 <head></head>
                 <body>
-                <h1>failed to start imap server</h1>
+                <h1>Failed to start imap server</h1>
                 <br>
                 <p>ERROR: {e}</p>
                 </body>
@@ -70,7 +72,7 @@ def func():
             except Exception as e:
                 print("ERROR: Failed to login to email")
                 msg = MIMEMultipart('alternative')
-                msg['Subject'] = "failed to login to email"
+                msg['Subject'] = "Failed to login to email"
                 msg['From'] = username
                 msg['To'] = target_email
                 html = """ <!DOCTYPE html>
@@ -102,7 +104,7 @@ def func():
                 # choose mailbox
                 mail.select('inbox')
             except Exception as e:
-                print("ERROR: failed to select mail inbox")
+                print("ERROR: Failed to select mail inbox")
                 msg = MIMEMultipart('alternative')
                 msg['Subject'] = "Failed to select mail inbox"
                 msg['From'] = username
@@ -207,6 +209,8 @@ def func():
             print("    PROMPT: ", subject)
             print("")
 
+
+            # help subject
             if subject == "help":
                 print("INFO: Sending help message...")
                 msg = MIMEMultipart('alternative')
@@ -225,7 +229,7 @@ def func():
                 <p>cap: capture photo</p>
                 <p>on: turn on camera</p>
                 <p>off: turn off camera</p>
-                <p>statuc: camera status</p>
+                <p>statusc: camera status</p>
                 <p>statusr: relay status</p>
                 <p>100: 100 seconds cycle delay</p>
                 <p>200: 200 seconds cycle delay</p>
@@ -247,7 +251,7 @@ def func():
                     se_server.close()
                     print("INFO: Email Sent")
                 except:
-                    print("ERROR: failed to send email")
+                    print("ERROR: Failed to send email")
 
 
             # none subject
@@ -320,7 +324,7 @@ def func():
                     se_server.close()
                     print("INFO: Email Sent")
                 except:
-                    print("ERROR: failed to send email")
+                    print("ERROR: Failed to send email")
 
 
             # 3600 subject
@@ -354,7 +358,7 @@ def func():
                     se_server.close()
                     print("INFO: Email Sent")
                 except:
-                    print("ERROR: failed to send email")
+                    print("ERROR: Failed to send email")
 
 
             # 7200 subject
@@ -388,14 +392,16 @@ def func():
                     se_server.close()
                     print("INFO: Email Sent")
                 except:
-                    print("ERROR: failed to send email")
+                    print("ERROR: Failed to send email")
             
 
             # on subject
             if subject == "on":
                 print("INFO: Turning ON the camera...")
+                on_url = "http://" + relay_ip + "/on"
+                #print("on_url: ", on_url)
                 try:
-                    res = requests.get("http://192.168.1.104/on")
+                    res = requests.get(on_url)
                     status_code = res.status_code
                 except:
                     print("ERROR: Failed to send ON request to relay")
@@ -434,8 +440,10 @@ def func():
             # off subject
             if subject == "off":
                 print("INFO: Turning OFF the camera...")
+                off_url = "http://" + relay_ip + "/off"
+                #print("off_url: ", off_url)
                 try:
-                    res = requests.get("http://192.168.1.104/off")
+                    res = requests.get(off_url)
                     status_code = res.status_code
                 except:
                     print("ERROR: Failed to send OFF request to relay")
@@ -474,9 +482,12 @@ def func():
             # statusc subject
             if subject == "statusc":
                 print("INFO: Retrieving camera status...")
+                ping_camera = "ping" + " " + camera_ip
+                #print("ping_camera: ", ping_camera)
                 try:
-                    cmd = "ping 10.110.169.10"
+                    cmd = ping_camera
                     result = subprocess.check_output(cmd, shell=True, text=True)
+                    print(result)
                 except Exception as e:
                     print("ERROR:", e)
                     result = e
@@ -514,9 +525,12 @@ def func():
             # statusr subject
             if subject == "statusr":
                 print("INFO: Retrieving relay status...")
+                ping_relay = "ping" + " " + relay_ip
+                #print("ping_relay: ", ping_relay)
                 try:
-                    cmd = "ping 192.168.1.4"
+                    cmd = ping_relay
                     result = subprocess.check_output(cmd, shell=True, text=True)
+                    print(result)
                 except Exception as e:
                     print("ERROR:", e)
                     result = e
@@ -638,7 +652,7 @@ def func():
                     fp.close()
                     msg.attach(image)
                 except:
-                    print("ERROR: failed to find image")
+                    print("ERROR: Failed to find image")
 
                 se_server = smtplib.SMTP('smtp.gmail.com', 587)
                 sleep(2)
@@ -651,7 +665,7 @@ def func():
                     se_server.close()
                     print("INFO: Email Sent")
                 except: 
-                    print("ERROR: failed to send email")
+                    print("ERROR: Failed to send email")
                 
                 # move image to archive folder
                 source = str(time)
@@ -668,7 +682,7 @@ def func():
         except Exception as e:
             print("MAIN_LOOP_ERROR:", e)
             print("===================================")
-            sleep(20)
+            sleep(2)
             func()
     
 func()
