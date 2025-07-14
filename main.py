@@ -18,8 +18,8 @@ from selenium.webdriver.chrome.options import Options
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-username = 'bisimchi0110@gmail.com' #Username(sender email address) EX: abcd@gmail.com
-password = 'gofg elbf zaak fkny' #Gmail App Password EX: aswd dedw frfr frgt
+username = '' #Username(sender email address) EX: abcd@gmail.com
+password = '' #Gmail App Password EX: aswd dedw frfr frgt
 target_email = "darksideofmosy@gmail.com" 
 re_server = 'imap.gmail.com'
 camera_ip = "192.168.1.6"
