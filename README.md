@@ -5,7 +5,7 @@ By implementing this project I have more security and privacy and it has become 
 
 
 
-## cap subject
+## Cap Subject
 ![banner](schematic/cap.png "banner")
-## off subject
+## Off Subject
 ![banner](schematic/off.png "banner")
