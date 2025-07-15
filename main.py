@@ -20,7 +20,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 username = '' #Username(sender email address) EX: abcd@gmail.com
 password = '' #Gmail App Password EX: aswd dedw frfr frgt
-target_email = "darksideofmosy@gmail.com" 
+target_email = "" 
 re_server = 'imap.gmail.com'
 camera_ip = "192.168.1.6"
 relay_ip = "192.168.1.4"
@@ -200,7 +200,7 @@ def func():
                                     mail_content = message.get_payload()
 
  
-                        if mail_from == "darksider <darksideofmosy@gmail.com>":
+                        if mail_from == "NULL":
                             #print(f'Prompt: {mail_subject}')
                             #print("")
                     
@@ -611,7 +611,15 @@ def func():
                 min = current_datetime.minute
                 time = str(hour) + "," + str(min) + ".jpg"
 
-                # create folder
+                # create image_archive folder
+                if os.path.exists("image_archive"):
+                    print("INFO: Image_archive folder exist")
+                else:
+                    os.makedirs("image_archive")
+                    print("INFO: Image_archive folder created")
+                
+
+                # create folder day
                 folder_name = str(today.month) + "." + str(today.day)
                 path = "image_archive/" + folder_name
                 exist = os.path.exists(path)
